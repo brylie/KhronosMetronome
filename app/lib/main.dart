@@ -37,6 +37,7 @@ class MetronomePage extends StatefulWidget {
 
 class _MetronomePageState extends State<MetronomePage> {
   double _tempo = 80;
+  bool _soundEnabled = false;
 
   final double _minimumTempoValue = 30;
   final double _maximumTempoValue = 200;
@@ -53,7 +54,9 @@ class _MetronomePageState extends State<MetronomePage> {
   }
 
   void _handleTimer(Timer timer) {
-    SystemSound.play(SystemSoundType.click);
+    if (_soundEnabled) {
+      SystemSound.play(SystemSoundType.click);
+    }
   }
 
   Timer _scheduleTimer([int milliseconds = 10000]) {
@@ -105,6 +108,31 @@ class _MetronomePageState extends State<MetronomePage> {
                 );
               },
             ),
+            Row(
+              mainAxisAlignment: MainAxisAlignment.spaceAround,
+              children: [
+                OutlinedButton(
+                  onPressed: () {
+                    setState(() {
+                      _soundEnabled = true;
+                    });
+                  },
+                  child: const Icon(
+                    Icons.play_arrow,
+                  ),
+                ),
+                OutlinedButton(
+                  onPressed: () {
+                    setState(() {
+                      _soundEnabled = false;
+                    });
+                  },
+                  child: const Icon(
+                    Icons.stop,
+                  ),
+                ),
+              ],
+            )
           ],
         ),
       ),
