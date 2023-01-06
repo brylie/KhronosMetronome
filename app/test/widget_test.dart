@@ -11,20 +11,29 @@ import 'package:flutter_test/flutter_test.dart';
 import 'package:ae_khronos/main.dart';
 
 void main() {
-  testWidgets('Counter increments smoke test', (WidgetTester tester) async {
-    // Build our app and trigger a frame.
-    await tester.pumpWidget(const MyApp());
+  testWidgets('Test sound enable and disable', (WidgetTester tester) async {
+    // ignore: prefer_const_constructors
+    await tester.pumpWidget(AeMetronome());
 
-    // Verify that our counter starts at 0.
-    expect(find.text('0'), findsOneWidget);
-    expect(find.text('1'), findsNothing);
+    // Get widget state for validation
+    final MetronomePageState aeMetronomeState =
+        tester.state(find.byType(MetronomePage));
 
-    // Tap the '+' icon and trigger a frame.
-    await tester.tap(find.byIcon(Icons.add));
+    // Widget should start with sound disabled
+    expect(aeMetronomeState.soundEnabled, false);
+
+    // press play
+    await tester.tap(find.byIcon(Icons.play_arrow));
     await tester.pump();
 
-    // Verify that our counter has incremented.
-    expect(find.text('0'), findsNothing);
-    expect(find.text('1'), findsOneWidget);
+    // After pressing play, sound should be enabled
+    expect(aeMetronomeState.soundEnabled, true);
+
+    // press stop
+    await tester.tap(find.byIcon(Icons.stop));
+    await tester.pump();
+
+    // After pressing stop, sound should be disabled
+    expect(aeMetronomeState.soundEnabled, false);
   });
 }

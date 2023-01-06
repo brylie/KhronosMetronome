@@ -32,12 +32,17 @@ class MetronomePage extends StatefulWidget {
   final String title;
 
   @override
-  State<MetronomePage> createState() => _MetronomePageState();
+  State<MetronomePage> createState() => MetronomePageState();
 }
 
-class _MetronomePageState extends State<MetronomePage> {
+// this is made public so it is visible in the unit test
+// Note: there may be a better way to test private state
+class MetronomePageState extends State<MetronomePage> {
   double _tempo = 80;
-  bool _soundEnabled = false;
+
+  // Used to toggle metronome click
+  // It is set to be a public member, so it is visible in the unit test
+  bool soundEnabled = false;
 
   final double _minimumTempoValue = 30;
   final double _maximumTempoValue = 200;
@@ -62,7 +67,7 @@ class _MetronomePageState extends State<MetronomePage> {
   }
 
   void _handleTimer(Timer timer) {
-    if (_soundEnabled) {
+    if (soundEnabled) {
       SystemSound.play(SystemSoundType.click);
     }
   }
@@ -129,7 +134,7 @@ class _MetronomePageState extends State<MetronomePage> {
                   style: _buttonStyle,
                   onPressed: () {
                     setState(() {
-                      _soundEnabled = true;
+                      soundEnabled = true;
                     });
                   },
                   child: const Icon(
@@ -140,7 +145,7 @@ class _MetronomePageState extends State<MetronomePage> {
                   style: _buttonStyle,
                   onPressed: () {
                     setState(() {
-                      _soundEnabled = false;
+                      soundEnabled = false;
                     });
                   },
                   child: const Icon(
