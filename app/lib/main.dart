@@ -42,8 +42,7 @@ class _MetronomePageState extends State<MetronomePage> {
   final double _maximumTempoValue = 200;
   final double _tempoIncrement = 10;
 
-  double get _tempoDivisions =>
-      (_maximumTempoValue - _minimumTempoValue) / _tempoIncrement;
+  late double _tempoDivisions;
 
   late Timer _timer;
 
@@ -64,6 +63,13 @@ class _MetronomePageState extends State<MetronomePage> {
   @override
   void initState() {
     super.initState();
+
+    // Calculate tempo divisions for slider
+    // Note: this is the only way I could find to calculate a value
+    // based on other state values when the widget loads
+    _tempoDivisions =
+        (_maximumTempoValue - _minimumTempoValue) / _tempoIncrement;
+
     _timer = _scheduleTimer(_calculateTimerInterval(_tempo.round()));
   }
 
