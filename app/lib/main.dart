@@ -47,6 +47,14 @@ class _MetronomePageState extends State<MetronomePage> {
 
   late Timer _timer;
 
+  final ButtonStyle _buttonStyle = ButtonStyle(
+    shape: MaterialStateProperty.all<RoundedRectangleBorder>(
+      RoundedRectangleBorder(
+        borderRadius: BorderRadius.circular(20),
+      ),
+    ),
+  );
+
   int _calculateTimerInterval(int tempo) {
     double timerInterval = minute / tempo;
 
@@ -112,6 +120,7 @@ class _MetronomePageState extends State<MetronomePage> {
               mainAxisAlignment: MainAxisAlignment.spaceAround,
               children: [
                 OutlinedButton(
+                  style: _buttonStyle,
                   onPressed: () {
                     setState(() {
                       _soundEnabled = true;
@@ -122,6 +131,7 @@ class _MetronomePageState extends State<MetronomePage> {
                   ),
                 ),
                 OutlinedButton(
+                  style: _buttonStyle,
                   onPressed: () {
                     setState(() {
                       _soundEnabled = false;
