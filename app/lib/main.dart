@@ -85,6 +85,12 @@ class _MetronomePageState extends State<MetronomePage> {
   }
 
   @override
+  void dispose() {
+    _timer.cancel();
+    super.dispose();
+  }
+
+  @override
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
