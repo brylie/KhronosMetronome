@@ -16,12 +16,12 @@ class AeMetronome extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return MaterialApp(
-      title: 'Æ Metronome',
+      title: 'Æ Khronos',
       theme: ThemeData(
         primarySwatch: Colors.blue,
         brightness: Brightness.dark,
       ),
-      home: const MetronomePage(title: 'Æ Metronome'),
+      home: const MetronomePage(title: 'Æ Khronos'),
     );
   }
 }
