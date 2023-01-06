@@ -1,6 +1,7 @@
 import 'dart:async';
 
 import 'package:flutter/material.dart';
+import 'package:flutter/services.dart';
 
 // number of milliseconds in a minute
 const minute = 1000 * 60;
@@ -53,10 +54,7 @@ class _MetronomePageState extends State<MetronomePage> {
   }
 
   void _handleTimer(Timer timer) {
-    // ignore: avoid_print
-    print('Tick: ${timer.tick}');
-    // ignore: todo
-    // TODO: add sound
+    SystemSound.play(SystemSoundType.click);
   }
 
   Timer _scheduleTimer([int milliseconds = 10000]) {
