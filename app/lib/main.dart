@@ -1,12 +1,12 @@
 import 'dart:async';
 
+import 'package:audioplayers/audioplayers.dart';
 import 'package:flutter/material.dart';
-// import 'package:flutter/services.dart';
-
-import 'package:just_audio/just_audio.dart';
 
 // number of milliseconds in a minute
 const minute = 1000 * 60;
+const metronomeAudioPath =
+    'audio/243748__unfa__metronome-2khz-strong-pulse.wav';
 
 void main() {
   runApp(const AeMetronome());
@@ -53,7 +53,8 @@ class MetronomePageState extends State<MetronomePage> {
   late double _tempoDivisions;
 
   late Timer _timer;
-  late AudioPlayer player;
+  // late AudioPlayer player;
+  static AudioPlayer player = AudioPlayer();
 
   final ButtonStyle _buttonStyle = ButtonStyle(
     shape: MaterialStateProperty.all<RoundedRectangleBorder>(
@@ -71,10 +72,7 @@ class MetronomePageState extends State<MetronomePage> {
 
   Future<void> _handleTimer(Timer timer) async {
     if (soundEnabled) {
-      await player
-          .setAsset('assets/audio/243749__unfa__metronome-1khz-weak-pulse.mp3');
-      player.play();
-      // SystemSound.play(SystemSoundType.click);
+      player.play(AssetSource(metronomeAudioPath));
     }
   }
 
@@ -86,7 +84,8 @@ class MetronomePageState extends State<MetronomePage> {
   void initState() {
     super.initState();
 
-    player = AudioPlayer();
+    // player = AudioPlayer();
+    // await player.setSource();
 
     // Calculate tempo divisions for slider
     // Note: this is the only way I could find to calculate a value
@@ -100,7 +99,7 @@ class MetronomePageState extends State<MetronomePage> {
   @override
   void dispose() {
     _timer.cancel();
-    player.dispose();
+    // player.dispose();
 
     super.dispose();
   }
