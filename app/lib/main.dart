@@ -48,8 +48,9 @@ class MetronomePageState extends State<MetronomePage> {
   double _tempo = 80;
 
   // Used to toggle metronome click
-  // It is set to be a public member, so it is visible in the unit test
-  bool soundEnabled = false;
+  // It is set to be a public member,
+  // so it is visible in the unit test
+  bool soundEnabled = true;
 
   late ReliableIntervalTimer _timer;
   // late AudioPlayer player;
@@ -118,18 +119,12 @@ class MetronomePageState extends State<MetronomePage> {
               max: _maximumTempoValue,
               divisions: _tempoDivisions.round(),
               label: _tempo.round().toString(),
-              onChanged: (double value) {
-                _timer.stop();
+              onChanged: (double value) async {
+                await _timer.stop();
 
                 setState(() {
                   _tempo = value;
                 });
-
-                _timer = _scheduleTimer(
-                  _calculateTimerInterval(_tempo.round()),
-                );
-
-                _timer.start();
               },
             ),
             Row(
@@ -137,10 +132,12 @@ class MetronomePageState extends State<MetronomePage> {
               children: [
                 OutlinedButton(
                   style: _buttonStyle,
-                  onPressed: () {
-                    setState(() {
-                      soundEnabled = true;
-                    });
+                  onPressed: () async {
+                    _timer = _scheduleTimer(
+                      _calculateTimerInterval(_tempo.round()),
+                    );
+
+                    await _timer.start();
                   },
                   child: const Icon(
                     Icons.play_arrow,
@@ -148,10 +145,8 @@ class MetronomePageState extends State<MetronomePage> {
                 ),
                 OutlinedButton(
                   style: _buttonStyle,
-                  onPressed: () {
-                    setState(() {
-                      soundEnabled = false;
-                    });
+                  onPressed: () async {
+                    await _timer.stop();
                   },
                   child: const Icon(
                     Icons.stop,
