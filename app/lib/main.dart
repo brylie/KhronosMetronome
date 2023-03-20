@@ -4,6 +4,12 @@ import 'package:reliable_interval_timer/reliable_interval_timer.dart';
 
 // number of milliseconds in a minute
 const minute = 1000 * 60;
+const double _minimumTempoValue = 30;
+const double _maximumTempoValue = 200;
+const double _tempoIncrement = 10;
+const double tempoRange = _maximumTempoValue - _minimumTempoValue;
+const double _tempoDivisions = tempoRange / _tempoIncrement;
+
 const metronomeAudioPath =
     'audio/243748__unfa__metronome-2khz-strong-pulse.wav';
 
@@ -45,12 +51,6 @@ class MetronomePageState extends State<MetronomePage> {
   // It is set to be a public member, so it is visible in the unit test
   bool soundEnabled = false;
 
-  final double _minimumTempoValue = 30;
-  final double _maximumTempoValue = 200;
-  final double _tempoIncrement = 10;
-
-  late double _tempoDivisions;
-
   late ReliableIntervalTimer _timer;
   // late AudioPlayer player;
   static AudioPlayer player = AudioPlayer();
@@ -85,12 +85,6 @@ class MetronomePageState extends State<MetronomePage> {
   @override
   void initState() {
     super.initState();
-
-    // Calculate tempo divisions for slider
-    // Note: this is the only way I could find to calculate a value
-    // based on other state values when the widget loads
-    _tempoDivisions =
-        (_maximumTempoValue - _minimumTempoValue) / _tempoIncrement;
 
     _timer = _scheduleTimer(_calculateTimerInterval(_tempo.round()));
 
