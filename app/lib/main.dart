@@ -1,7 +1,6 @@
-import 'dart:async';
-
 import 'package:audioplayers/audioplayers.dart';
 import 'package:flutter/material.dart';
+import 'package:reliable_interval_timer/reliable_interval_timer.dart';
 
 // number of milliseconds in a minute
 const minute = 1000 * 60;
@@ -52,7 +51,7 @@ class MetronomePageState extends State<MetronomePage> {
 
   late double _tempoDivisions;
 
-  late Timer _timer;
+  late ReliableIntervalTimer _timer;
   // late AudioPlayer player;
   static AudioPlayer player = AudioPlayer();
 
@@ -70,22 +69,22 @@ class MetronomePageState extends State<MetronomePage> {
     return timerInterval.round();
   }
 
-  Future<void> _handleTimer(Timer timer) async {
+  void onTimerTick(int elapsedMilliseconds) async {
     if (soundEnabled) {
       player.play(AssetSource(metronomeAudioPath));
     }
   }
 
-  Timer _scheduleTimer([int milliseconds = 10000]) {
-    return Timer.periodic(Duration(milliseconds: milliseconds), _handleTimer);
+  ReliableIntervalTimer _scheduleTimer([int milliseconds = 10000]) {
+    return ReliableIntervalTimer(
+      interval: Duration(milliseconds: milliseconds),
+      callback: onTimerTick,
+    );
   }
 
   @override
   void initState() {
     super.initState();
-
-    // player = AudioPlayer();
-    // await player.setSource();
 
     // Calculate tempo divisions for slider
     // Note: this is the only way I could find to calculate a value
@@ -94,12 +93,13 @@ class MetronomePageState extends State<MetronomePage> {
         (_maximumTempoValue - _minimumTempoValue) / _tempoIncrement;
 
     _timer = _scheduleTimer(_calculateTimerInterval(_tempo.round()));
+
+    _timer.start();
   }
 
   @override
   void dispose() {
-    _timer.cancel();
-    // player.dispose();
+    _timer.stop();
 
     super.dispose();
   }
@@ -125,7 +125,7 @@ class MetronomePageState extends State<MetronomePage> {
               divisions: _tempoDivisions.round(),
               label: _tempo.round().toString(),
               onChanged: (double value) {
-                _timer.cancel();
+                _timer.stop();
 
                 setState(() {
                   _tempo = value;
@@ -134,6 +134,8 @@ class MetronomePageState extends State<MetronomePage> {
                 _timer = _scheduleTimer(
                   _calculateTimerInterval(_tempo.round()),
                 );
+
+                _timer.start();
               },
             ),
             Row(
